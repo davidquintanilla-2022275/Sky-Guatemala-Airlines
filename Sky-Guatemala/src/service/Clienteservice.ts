@@ -30,28 +30,42 @@ export class ClienteService {
     }
 
     async eliminarCliente(id: number): Promise<boolean> {
-        if (id <= 0) return false;
+    if (id <= 0) return false;
 
-        const lista = clientes as Cliente[];
-        const index = lista.findIndex(c => c.id_clinte === id);
+    const lista = clientes as Cliente[];
+    const index = lista.findIndex(c => c.id_clinte === id);
 
-        if (index === -1) return false;
+    if (index === -1) return false;
 
-        lista.splice(index, 1);
-        return true;
-    }
+    lista.splice(index, 1);
 
-    async editarCliente(id: number, cliente: Cliente): Promise<boolean> {
-        validarCliente(cliente);
+    await fs.writeFile(
+        ruta,
+        JSON.stringify(lista, null, 2),
+        "utf-8"
+    );
 
-        if (id <= 0) return false;
+    return true;
+}
 
-        const lista = clientes as Cliente[];
-        const index = lista.findIndex(c => c.id_clinte === id);
+  async editarCliente(id: number, cliente: Cliente): Promise<boolean> {
+    validarCliente(cliente);
 
-        if (index === -1) return false;
+    if (id <= 0) return false;
 
-        lista[index] = cliente;
-        return true;
-    }
+    const lista = clientes as Cliente[];
+    const index = lista.findIndex(c => c.id_clinte === id);
+
+    if (index === -1) return false;
+
+    lista[index] = cliente;
+
+    await fs.writeFile(
+        ruta,
+        JSON.stringify(lista, null, 2),
+        "utf-8"
+    );
+
+    return true;
+}
 }
