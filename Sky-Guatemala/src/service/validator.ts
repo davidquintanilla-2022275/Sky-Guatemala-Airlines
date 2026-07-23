@@ -57,7 +57,7 @@ export function validarEmpleado(empleado: Empleado): void {
 }
 //============================================
 //Validacion de Envio
-//============================================3
+//============================================
 export function validarEnvio(envio: Envio): void {
 
     if (!envio.fecha_envio) {
@@ -78,5 +78,26 @@ export function validarEnvio(envio: Envio): void {
 
     if (!envio.cliente) {
         throw new Error("El cliente es obligatorio.");
+    }
+}
+//============================================
+// Validacion de Pago
+//============================================
+export function validarPago(pago: Pago): void {
+
+    if (pago.monto <= 0) {
+        throw new Error("El monto debe ser mayor que cero.");
+    }
+
+    if (!pago.metodo_pago.trim()) {
+        throw new Error("El método de pago es obligatorio.");
+    }
+
+    if (!pago.fecha_pago.trim()) {
+        throw new Error("La fecha de pago es obligatoria.");
+    }
+
+    if (!pago.id_envio) {
+        throw new Error("El envío es obligatorio.");
     }
 }
