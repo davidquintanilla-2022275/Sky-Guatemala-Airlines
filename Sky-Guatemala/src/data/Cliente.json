@@ -1,0 +1,18 @@
+[
+  {
+    "id_clinte": 1,
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "telefono": "55512345",
+    "correo": "juan.perez@gmail.com",
+    "direccion": "Zona 10, Ciudad de Guatemala"
+  },
+  {
+    "id_clinte": 2,
+    "nombre": "María",
+    "apellido": "López",
+    "telefono": "44456789",
+    "correo": "maria.lopez@hotmail.com",
+    "direccion": "Zona 1, Quetzaltenango"
+  }
+]
