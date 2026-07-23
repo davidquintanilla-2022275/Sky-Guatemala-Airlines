@@ -1,6 +1,10 @@
 import { Cliente } from "../models/Cliente";
 import { validarCliente } from "./validator";
 import clientes from "../data/Cliente.json";
+import fs from "fs/promises";
+import path from "path";
+
+const ruta = path.join(__dirname, "../data/Cliente.json");
 
 export class ClienteService {
 
@@ -9,10 +13,16 @@ export class ClienteService {
     }
 
     async agregarCliente(cliente: Cliente): Promise<void> {
-        validarCliente(cliente);
+    validarCliente(cliente);
 
-        (clientes as Cliente[]).push(cliente);
-    }
+    (clientes as Cliente[]).push(cliente);
+
+    await fs.writeFile(
+        ruta,
+        JSON.stringify(clientes, null, 2),
+        "utf-8"
+    );
+}
 
     async buscarCliente(id: number): Promise<Cliente | null> {
         const cliente = (clientes as Cliente[]).find(c => c.id_clinte === id);
