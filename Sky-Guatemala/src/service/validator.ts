@@ -5,7 +5,7 @@ import { Pago } from "../models/Pago";
 import { Paquete } from "../models/Paquete";
 import { Ruta } from "../models/Ruta";
 import { Sucursal } from "../models/Sucursal";
-import { Tracing } from "node:trace_events";
+import { Tracking } from "../models/Tracking";
 import { Vehiculo } from "../models/Vehiculo";
 import { Vuelo } from "../models/Vuelo";
 
@@ -99,5 +99,30 @@ export function validarPago(pago: Pago): void {
 
     if (!pago.id_envio) {
         throw new Error("El envío es obligatorio.");
+    }
+}
+//============================================
+// Validacion de paquete
+//============================================
+export function validarPaquete(paquete: Paquete): void {
+
+    if (paquete.peso <= 0) {
+        throw new Error("El peso debe ser mayor que cero.");
+    }
+
+    if (!paquete.tamaño.trim()) {
+        throw new Error("El tamaño es obligatorio.");
+    }
+
+    if (!paquete.descripcion.trim()) {
+        throw new Error("La descripción es obligatoria.");
+    }
+
+    if (!paquete.envio) {
+        throw new Error("El envío es obligatorio.");
+    }
+
+    if (paquete.valor_declarado <= 0) {
+        throw new Error("El valor declarado debe ser mayor que cero.");
     }
 }
