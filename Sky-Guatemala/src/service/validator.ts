@@ -147,3 +147,20 @@ export function validarRuta(ruta: Ruta): void {
         throw new Error("El tiempo estimado es obligatorio.");
     }
 }
+//============================================
+// Validacion de Sucursal
+//============================================
+export function validarSucursal(sucursal: Sucursal): void {
+
+    if (!sucursal.nombre.trim()) {
+        throw new Error("El nombre es obligatorio.");
+    }
+
+    if (!sucursal.ubicacion.trim()) {
+        throw new Error("La ubicación es obligatoria.");
+    }
+
+    if (!sucursal.telefono.trim()) {
+        throw new Error("El teléfono es obligatorio.");
+    }
+}
