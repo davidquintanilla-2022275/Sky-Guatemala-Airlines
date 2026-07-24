@@ -189,3 +189,25 @@ export function validarTracking(tracking: Tracking): void {
         throw new Error("El envío es obligatorio.");
     }
 }
+//============================================
+// Validaciones de Vehiculo
+//============================================
+
+export function validarVehiculo(vehiculo: Vehiculo): void {
+
+    if (!vehiculo.placa.trim()) {
+        throw new Error("La placa es obligatoria.");
+    }
+
+    if (!vehiculo.tipo.trim()) {
+        throw new Error("El tipo es obligatorio.");
+    }
+
+    if (!vehiculo.capacidad.trim()) {
+        throw new Error("La capacidad es obligatoria.");
+    }
+
+    if (!vehiculo.estado.trim()) {
+        throw new Error("El estado es obligatorio.");
+    }
+}
