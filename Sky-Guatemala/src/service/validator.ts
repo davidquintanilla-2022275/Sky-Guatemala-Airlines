@@ -164,3 +164,28 @@ export function validarSucursal(sucursal: Sucursal): void {
         throw new Error("El teléfono es obligatorio.");
     }
 }
+//============================================
+// Validaciones de Tracking
+//============================================
+export function validarTracking(tracking: Tracking): void {
+
+    if (!tracking.codigo_tracking.trim()) {
+        throw new Error("El código de tracking es obligatorio.");
+    }
+
+    if (!tracking.ubicacion_actual.trim()) {
+        throw new Error("La ubicación actual es obligatoria.");
+    }
+
+    if (!tracking.estado_actual.trim()) {
+        throw new Error("El estado actual es obligatorio.");
+    }
+
+    if (!tracking.fecha_actualizacion) {
+        throw new Error("La fecha de actualización es obligatoria.");
+    }
+
+    if (!tracking.id_envio) {
+        throw new Error("El envío es obligatorio.");
+    }
+}
