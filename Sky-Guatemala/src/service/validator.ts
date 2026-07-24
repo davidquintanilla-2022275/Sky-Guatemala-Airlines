@@ -211,3 +211,32 @@ export function validarVehiculo(vehiculo: Vehiculo): void {
         throw new Error("El estado es obligatorio.");
     }
 }
+//============================================
+// Validaciones de Vuelo
+//============================================
+export function validarVuelo(vuelo: Vuelo): void {
+
+    if (!vuelo.numero_vuelo.trim()) {
+        throw new Error("El número de vuelo es obligatorio.");
+    }
+
+    if (!vuelo.origen.trim()) {
+        throw new Error("El origen es obligatorio.");
+    }
+
+    if (!vuelo.destino.trim()) {
+        throw new Error("El destino es obligatorio.");
+    }
+
+    if (!vuelo.fecha_salida.trim()) {
+        throw new Error("La fecha de salida es obligatoria.");
+    }
+
+    if (!vuelo.fecha_llegada.trim()) {
+        throw new Error("La fecha de llegada es obligatoria.");
+    }
+
+    if (!vuelo.id_ruta) {
+        throw new Error("La ruta es obligatoria.");
+    }
+}
