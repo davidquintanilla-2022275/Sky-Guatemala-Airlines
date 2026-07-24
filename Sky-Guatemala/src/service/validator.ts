@@ -126,3 +126,24 @@ export function validarPaquete(paquete: Paquete): void {
         throw new Error("El valor declarado debe ser mayor que cero.");
     }
 }
+//============================================
+// Validacion de Ruta
+//============================================
+export function validarRuta(ruta: Ruta): void {
+
+    if (!ruta.origen.trim()) {
+        throw new Error("El origen es obligatorio.");
+    }
+
+    if (!ruta.destino.trim()) {
+        throw new Error("El destino es obligatorio.");
+    }
+
+    if (ruta.distancia_km <= 0) {
+        throw new Error("La distancia debe ser mayor que cero.");
+    }
+
+    if (!ruta.tiempo_estimado.trim()) {
+        throw new Error("El tiempo estimado es obligatorio.");
+    }
+}
