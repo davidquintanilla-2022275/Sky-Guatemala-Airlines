@@ -4,7 +4,7 @@ import { Cliente } from "./Cliente";
 
 export interface Envio {
     id_envio: number;
-    fecha_envio: Date;
+    fecha_envio: string;
     estado: string;
     costo: number;
     sucursal: Sucursal;
