@@ -1,48 +1,53 @@
 import { Empleado } from "../models/Empleado";
 import { validarEmpleado } from "./validator";
-import empleados from "../data/Empleado.json";
-import fs from "fs/promises";
-import path from "path";
-
-const ruta = path.join(__dirname, "../data/Empleado.json");
+import { conexion } from "../database/conexion";
 
 export class EmpleadoService {
 
     async listarEmpleados(): Promise<Empleado[]> {
-        return empleados as Empleado[];
+        const [rows] = await conexion.query("CALL sp_listar_empleado()");
+        return (rows as any)[0] as Empleado[];
     }
 
     async agregarEmpleado(empleado: Empleado): Promise<void> {
         validarEmpleado(empleado);
 
-        (empleados as Empleado[]).push(empleado);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(empleados, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_crear_empleado(?, ?, ?, ?)",
+            [
+                empleado.nombre,
+                empleado.puesto,
+                empleado.telefono,
+                empleado.id_sucursal
+            ]
         );
     }
 
     async buscarEmpleado(id: number): Promise<Empleado | null> {
-        const empleado = (empleados as Empleado[]).find(e => e.id_empleado === id);
-        return empleado ?? null;
+        const [rows] = await conexion.query(
+            "CALL sp_buscar_empleado(?)",
+            [id]
+        );
+
+        const resultado = (rows as any)[0];
+
+        if (resultado.length === 0) {
+            return null;
+        }
+
+        return resultado[0] as Empleado;
     }
 
     async eliminarEmpleado(id: number): Promise<boolean> {
-        if (id <= 0) return false;
+        const empleado = await this.buscarEmpleado(id);
 
-        const lista = empleados as Empleado[];
-        const index = lista.findIndex(e => e.id_empleado === id);
+        if (!empleado) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista.splice(index, 1);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_eliminar_empleado(?)",
+            [id]
         );
 
         return true;
@@ -51,19 +56,21 @@ export class EmpleadoService {
     async editarEmpleado(id: number, empleado: Empleado): Promise<boolean> {
         validarEmpleado(empleado);
 
-        if (id <= 0) return false;
+        const existe = await this.buscarEmpleado(id);
 
-        const lista = empleados as Empleado[];
-        const index = lista.findIndex(e => e.id_empleado === id);
+        if (!existe) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista[index] = empleado;
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_actualizar_empleado(?, ?, ?, ?, ?)",
+            [
+                id,
+                empleado.nombre,
+                empleado.puesto,
+                empleado.telefono,
+                empleado.id_sucursal
+            ]
         );
 
         return true;
