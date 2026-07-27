@@ -1,10 +1,10 @@
 [
   {
     "id_clinte": 1,
-    "nombre": "Juan",
+    "nombre": "cartajena",
     "apellido": "Pérez",
     "telefono": "55512345",
-    "correo": "juan.perez@gmail.com",
+    "correo": "cartajena.perez@gmail.com",
     "direccion": "Zona 10, Ciudad de Guatemala"
   },
   {
