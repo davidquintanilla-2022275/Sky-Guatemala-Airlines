@@ -1,48 +1,55 @@
 import { Envio } from "../models/Envio";
 import { validarEnvio } from "./validator";
-import envios from "../data/Envio.json";
-import fs from "fs/promises";
-import path from "path";
-
-const ruta = path.join(__dirname, "../data/Envio.json");
+import { conexion } from "../database/conexion";
 
 export class EnvioService {
 
     async listarEnvios(): Promise<Envio[]> {
-        return envios as Envio[];
+        const [rows] = await conexion.query("CALL sp_listar_envio()");
+        return (rows as any)[0] as Envio[];
     }
 
     async agregarEnvio(envio: Envio): Promise<void> {
         validarEnvio(envio);
 
-        (envios as Envio[]).push(envio);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(envios, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_crear_envio(?, ?, ?, ?, ?, ?)",
+            [
+                envio.fecha_envio,
+                envio.estado,
+                envio.costo,
+                envio.id_cliente,
+                envio.id_sucursal_origen,
+                envio.id_sucursal_destino
+            ]
         );
     }
 
     async buscarEnvio(id: number): Promise<Envio | null> {
-        const envio = (envios as Envio[]).find(e => e.id_envio === id);
-        return envio ?? null;
+        const [rows] = await conexion.query(
+            "CALL sp_buscar_envio(?)",
+            [id]
+        );
+
+        const resultado = (rows as any)[0];
+
+        if (resultado.length === 0) {
+            return null;
+        }
+
+        return resultado[0] as Envio;
     }
 
     async eliminarEnvio(id: number): Promise<boolean> {
-        if (id <= 0) return false;
+        const envio = await this.buscarEnvio(id);
 
-        const lista = envios as Envio[];
-        const index = lista.findIndex(e => e.id_envio === id);
+        if (!envio) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista.splice(index, 1);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_eliminar_envio(?)",
+            [id]
         );
 
         return true;
@@ -51,19 +58,23 @@ export class EnvioService {
     async editarEnvio(id: number, envio: Envio): Promise<boolean> {
         validarEnvio(envio);
 
-        if (id <= 0) return false;
+        const existe = await this.buscarEnvio(id);
 
-        const lista = envios as Envio[];
-        const index = lista.findIndex(e => e.id_envio === id);
+        if (!existe) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista[index] = envio;
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_actualizar_envio(?, ?, ?, ?, ?, ?, ?)",
+            [
+                id,
+                envio.fecha_envio,
+                envio.estado,
+                envio.costo,
+                envio.id_cliente,
+                envio.id_sucursal_origen,
+                envio.id_sucursal_destino
+            ]
         );
 
         return true;
