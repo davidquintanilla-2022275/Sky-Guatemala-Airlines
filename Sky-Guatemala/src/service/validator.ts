@@ -18,7 +18,7 @@ export function validarCliente(cliente: Cliente): void {
         throw new Error("El nombre es obligatorio.");
     }
 
-    if (!cliente.apellido.trim()) {
+    if (!cliente.apellido_empresa.trim()) {
         throw new Error("El apellido es obligatorio.");
     }
 
@@ -72,11 +72,15 @@ export function validarEnvio(envio: Envio): void {
         throw new Error("El costo debe ser mayor que cero.");
     }
 
-    if (!envio.sucursal) {
-        throw new Error("La sucursal es obligatoria.");
+    if (!envio.id_sucursal_origen) {
+    throw new Error("La sucursal de origen es obligatoria.");
     }
 
-    if (!envio.cliente) {
+    if (!envio.id_sucursal_destino) {
+        throw new Error("La sucursal de destino es obligatoria.");
+    }
+
+    if (!envio.id_cliente) {
         throw new Error("El cliente es obligatorio.");
     }
 }
@@ -118,8 +122,8 @@ export function validarPaquete(paquete: Paquete): void {
         throw new Error("La descripción es obligatoria.");
     }
 
-    if (!paquete.envio) {
-        throw new Error("El envío es obligatorio.");
+    if (!paquete.id_envio) {
+    throw new Error("El envío es obligatorio.");
     }
 
     if (paquete.valor_declarado <= 0) {
