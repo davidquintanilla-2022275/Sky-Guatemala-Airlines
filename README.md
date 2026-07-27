@@ -1,5 +1,4 @@
 # Sky-Guatemala-Airlines
-# Sky Guatemala Airlines
 
 **La mejor Aerolínea**
 
