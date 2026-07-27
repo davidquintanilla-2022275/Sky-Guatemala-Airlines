@@ -1,0 +1,83 @@
+[
+  {
+    "id_paquete": 1,
+    "peso": 5.5,
+    "tamaño": "Mediano",
+    "descripcion": "Ropa y accesorios",
+    "envio": {
+      "id_envio": 1,
+      "fecha_envio": "2026-07-26",
+      "estado": "En tránsito",
+      "costo": 250.5,
+      "sucursal": {
+        "id_sucursal": 1,
+        "nombre": "Sucursal Central",
+        "ubicacion": "Zona 1, Guatemala",
+        "telefono": "22221111"
+      },
+      "cliente": {
+        "id_clinte": 1,
+        "nombre": "Juan",
+        "apellido": "Pérez",
+        "telefono": "55551234",
+        "correo": "juan.perez@gmail.com",
+        "direccion": "Zona 1, Guatemala"
+      }
+    },
+    "valor_declarado": 500
+  },
+  {
+    "id_paquete": 2,
+    "peso": 2.8,
+    "tamaño": "Pequeño",
+    "descripcion": "Documentos importantes",
+    "envio": {
+      "id_envio": 2,
+      "fecha_envio": "2026-07-27",
+      "estado": "Entregado",
+      "costo": 180.75,
+      "sucursal": {
+        "id_sucursal": 2,
+        "nombre": "Sucursal Norte",
+        "ubicacion": "Zona 18, Guatemala",
+        "telefono": "22222222"
+      },
+      "cliente": {
+        "id_clinte": 2,
+        "nombre": "María",
+        "apellido": "López",
+        "telefono": "55552345",
+        "correo": "maria.lopez@gmail.com",
+        "direccion": "Zona 10, Guatemala"
+      }
+    },
+    "valor_declarado": 250
+  },
+  {
+    "id_paquete": 3,
+    "peso": 12.3,
+    "tamaño": "Grande",
+    "descripcion": "Equipo electrónico",
+    "envio": {
+      "id_envio": 3,
+      "fecha_envio": "2026-07-28",
+      "estado": "Pendiente",
+      "costo": 320,
+      "sucursal": {
+        "id_sucursal": 3,
+        "nombre": "Sucursal Sur",
+        "ubicacion": "Villa Nueva",
+        "telefono": "22223333"
+      },
+      "cliente": {
+        "id_clinte": 3,
+        "nombre": "Carlos",
+        "apellido": "Hernández",
+        "telefono": "55553456",
+        "correo": "carlos.hernandez@gmail.com",
+        "direccion": "Zona 5, Guatemala"
+      }
+    },
+    "valor_declarado": 1200
+  }
+]
