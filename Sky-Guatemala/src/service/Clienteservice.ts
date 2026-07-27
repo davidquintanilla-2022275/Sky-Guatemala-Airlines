@@ -1,71 +1,80 @@
 import { Cliente } from "../models/Cliente";
 import { validarCliente } from "./validator";
-import clientes from "../data/Cliente.json";
-import fs from "fs/promises";
-import path from "path";
-
-const ruta = path.join(__dirname, "../data/Cliente.json");
+import { conexion } from "../database/conexion";
 
 export class ClienteService {
 
     async listarClientes(): Promise<Cliente[]> {
-        return clientes as Cliente[];
+        const [rows] = await conexion.query("CALL sp_listar_cliente()");
+        return (rows as any)[0] as Cliente[];
     }
 
     async agregarCliente(cliente: Cliente): Promise<void> {
-    validarCliente(cliente);
+        validarCliente(cliente);
 
-    (clientes as Cliente[]).push(cliente);
-
-    await fs.writeFile(
-        ruta,
-        JSON.stringify(clientes, null, 2),
-        "utf-8"
-    );
-}
+        await conexion.query(
+            "CALL sp_crear_cliente(?, ?, ?, ?, ?)",
+            [
+                cliente.nombre,
+                cliente.apellido_empresa,
+                cliente.telefono,
+                cliente.correo,
+                cliente.direccion
+            ]
+        );
+    }
 
     async buscarCliente(id: number): Promise<Cliente | null> {
-        const cliente = (clientes as Cliente[]).find(c => c.id_clinte === id);
-        return cliente ?? null;
+        const [rows] = await conexion.query(
+            "CALL sp_buscar_cliente(?)",
+            [id]
+        );
+
+        const resultado = (rows as any)[0];
+
+        if (resultado.length === 0) {
+            return null;
+        }
+
+        return resultado[0] as Cliente;
     }
 
     async eliminarCliente(id: number): Promise<boolean> {
-    if (id <= 0) return false;
+        const cliente = await this.buscarCliente(id);
 
-    const lista = clientes as Cliente[];
-    const index = lista.findIndex(c => c.id_clinte === id);
+        if (!cliente) {
+            return false;
+        }
 
-    if (index === -1) return false;
+        await conexion.query(
+            "CALL sp_eliminar_cliente(?)",
+            [id]
+        );
 
-    lista.splice(index, 1);
+        return true;
+    }
 
-    await fs.writeFile(
-        ruta,
-        JSON.stringify(lista, null, 2),
-        "utf-8"
-    );
+    async editarCliente(id: number, cliente: Cliente): Promise<boolean> {
+        validarCliente(cliente);
 
-    return true;
-}
+        const existe = await this.buscarCliente(id);
 
-  async editarCliente(id: number, cliente: Cliente): Promise<boolean> {
-    validarCliente(cliente);
+        if (!existe) {
+            return false;
+        }
 
-    if (id <= 0) return false;
+        await conexion.query(
+            "CALL sp_actualizar_cliente(?, ?, ?, ?, ?, ?)",
+            [
+                id,
+                cliente.nombre,
+                cliente.apellido_empresa,
+                cliente.telefono,
+                cliente.correo,
+                cliente.direccion
+            ]
+        );
 
-    const lista = clientes as Cliente[];
-    const index = lista.findIndex(c => c.id_clinte === id);
-
-    if (index === -1) return false;
-
-    lista[index] = cliente;
-
-    await fs.writeFile(
-        ruta,
-        JSON.stringify(lista, null, 2),
-        "utf-8"
-    );
-
-    return true;
-}
+        return true;
+    }
 }
