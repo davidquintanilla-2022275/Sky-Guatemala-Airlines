@@ -1,48 +1,53 @@
 import { Pago } from "../models/Pago";
 import { validarPago } from "./validator";
-import pagos from "../data/Pago.json";
-import fs from "fs/promises";
-import path from "path";
-
-const ruta = path.join(__dirname, "../data/Pago.json");
+import { conexion } from "../database/conexion";
 
 export class PagoService {
 
     async listarPagos(): Promise<Pago[]> {
-        return pagos as Pago[];
+        const [rows] = await conexion.query("CALL sp_listar_pago()");
+        return (rows as any)[0] as Pago[];
     }
 
     async agregarPago(pago: Pago): Promise<void> {
         validarPago(pago);
 
-        (pagos as Pago[]).push(pago);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(pagos, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_crear_pago(?, ?, ?, ?)",
+            [
+                pago.monto,
+                pago.metodo_pago,
+                pago.fecha_pago,
+                pago.id_envio
+            ]
         );
     }
 
     async buscarPago(id: number): Promise<Pago | null> {
-        const pago = (pagos as Pago[]).find(p => p.id_pago === id);
-        return pago ?? null;
+        const [rows] = await conexion.query(
+            "CALL sp_buscar_pago(?)",
+            [id]
+        );
+
+        const resultado = (rows as any)[0];
+
+        if (resultado.length === 0) {
+            return null;
+        }
+
+        return resultado[0] as Pago;
     }
 
     async eliminarPago(id: number): Promise<boolean> {
-        if (id <= 0) return false;
+        const pago = await this.buscarPago(id);
 
-        const lista = pagos as Pago[];
-        const index = lista.findIndex(p => p.id_pago === id);
+        if (!pago) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista.splice(index, 1);
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_eliminar_pago(?)",
+            [id]
         );
 
         return true;
@@ -51,19 +56,21 @@ export class PagoService {
     async editarPago(id: number, pago: Pago): Promise<boolean> {
         validarPago(pago);
 
-        if (id <= 0) return false;
+        const existe = await this.buscarPago(id);
 
-        const lista = pagos as Pago[];
-        const index = lista.findIndex(p => p.id_pago === id);
+        if (!existe) {
+            return false;
+        }
 
-        if (index === -1) return false;
-
-        lista[index] = pago;
-
-        await fs.writeFile(
-            ruta,
-            JSON.stringify(lista, null, 2),
-            "utf-8"
+        await conexion.query(
+            "CALL sp_actualizar_pago(?, ?, ?, ?, ?)",
+            [
+                id,
+                pago.monto,
+                pago.metodo_pago,
+                pago.fecha_pago,
+                pago.id_envio
+            ]
         );
 
         return true;
