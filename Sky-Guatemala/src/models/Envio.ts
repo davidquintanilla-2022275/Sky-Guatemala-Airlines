@@ -3,6 +3,7 @@ export interface Envio {
     fecha_envio: string;
     estado: string;
     costo: number;
-    sucursal: number;
-    cliente: number;
+    id_cliente: number;
+    id_sucursal_origen: number;
+    id_sucursal_destino: number;
 }
