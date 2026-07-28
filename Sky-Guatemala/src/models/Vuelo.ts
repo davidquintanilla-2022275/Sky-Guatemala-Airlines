@@ -1,5 +1,3 @@
-import {Ruta} from "./Ruta";
-
 export interface Vuelo {
     id_vuelo: number;
     numero_vuelo: string;
@@ -7,5 +5,5 @@ export interface Vuelo {
     destino: string;
     fecha_salida: string;
     fecha_llegada: string;
-    id_ruta: Ruta;
+    id_ruta: number;
 }
